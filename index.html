@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroPoint DayZ - Donations</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Press Start 2P', cursive;
+    background: #0a0a0a;
+    cursor: none;
+  }
+
+  /* Background image */
+  #bg {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    filter: brightness(0.5); /* darken for cinematic effect */
+  }
+
+  /* Fog overlay */
+  #fog {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background: radial-gradient(circle, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 70%);
+    animation: drift 60s linear infinite;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  @keyframes drift {
+    0% { transform: translate(0,0); }
+    50% { transform: translate(50px, 50px); }
+    100% { transform: translate(0,0); }
+  }
+
+  /* Donation UI container */
+  #donationUI {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #00ffea;
+    text-shadow: 0 0 10px #00ffea, 0 0 20px #00ffea;
+  }
+
+  .donation-tier {
+    display: block;
+    margin: 15px auto;
+    padding: 20px 40px;
+    max-width: 300px;
+    border: 2px solid #00ffea;
+    border-radius: 10px;
+    background: rgba(10,10,10,0.8);
+    box-shadow: 0 0 10px #00ffea;
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    font-size: 0.9em;
+  }
+
+  .donation-tier:hover {
+    transform: scale(1.05);
+    background: rgba(0,255,234,0.2);
+    box-shadow: 0 0 20px #00ffea, 0 0 30px #00ffea inset;
+  }
+
+  /* Particle style */
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(0,255,234,0.7);
+    border-radius: 50%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    z-index: 5;
+  }
+</style>
+</head>
+<body>
+
+<!-- Background map / forest -->
+<img id="bg" src="https://images.unsplash.com/photo-1601132350337-14eb137d89e2?fit=crop&w=1950&q=80" alt="DayZ-style forest">
+
+<div id="fog"></div>
+
+<div id="donationUI">
+  <h1>ZeroPoint DayZ Donations</h1>
+  <span class="donation-tier">Tier 1: €15 - Basic Prio</span>
+  <span class="donation-tier">Tier 2: €30 - Extended Prio + Badge</span>
+  <span class="donation-tier">Tier 3: €50 - VIP Perks + Skin</span>
+</div>
+
+<script>
+  // Create interactive particles
+  const numParticles = 60;
+  const particles = [];
+  for(let i=0;i<numParticles;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    document.body.appendChild(p);
+    particles.push({el: p, x: window.innerWidth/2, y: window.innerHeight/2, vx:0, vy:0});
+  }
+
+  let mouse = {x: window.innerWidth/2, y: window.innerHeight/2};
+  window.addEventListener('mousemove', e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  function animate() {
+    particles.forEach(p => {
+      p.vx += (mouse.x - p.x) * 0.02 * (Math.random()*0.5+0.5);
+      p.vy += (mouse.y - p.y) * 0.02 * (Math.random()*0.5+0.5);
+      p.vx *= 0.85;
+      p.vy *= 0.85;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.el.style.transform = `translate(${p.x}px, ${p.y}px)`;
+    });
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
+
+</body>
+</html>
